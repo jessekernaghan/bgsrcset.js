@@ -1,0 +1,10 @@
+# Files that mess with multiple users setups
+*.sublime-project
+*.sublime-workspace
+wp-config.php
+.htaccess
+Gemfile.lock
+
+# Useless files to ignore
+*.DS_Store
+*.scssc
