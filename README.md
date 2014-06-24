@@ -66,6 +66,10 @@ var bgss = new bgsrcset('.bgimg', function(data){
 ```
 The callback contains variables for targeting the element as well as giving access to all the srcset information.
 
+Examples
+----
 
+An example usage can be found [here] [2].
 
 [1]:http://www.w3.org/html/wg/drafts/srcset/w3c-srcset/
+[2]:http://codepen.io/jessekernaghan/pen/wGjtC
