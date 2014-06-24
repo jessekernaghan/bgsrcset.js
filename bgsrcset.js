@@ -228,5 +228,8 @@ function dynamicSort(property) {
   }
 }
 
+/*
+usage
 var bgss = new bgsrcset();
 bgss.init('.bgimg' );
+*/
