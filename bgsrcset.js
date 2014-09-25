@@ -113,7 +113,11 @@ bgsrcset.prototype.parse = function(obj){
           e = curelem.srcset[i]; //current attribute
 
       switch(true){
-      case /[jpg|jpeg|gif|png|svg]$/.test(a):
+      case a.trim() == "":
+        //in case of extra white spaces
+          continue;
+      break;
+      case a[a.length-1] != 'w' && a[a.length-1] != 'x':
         e.src = a;
       break;
       case a[a.length-1] === 'w':
@@ -123,7 +127,6 @@ bgsrcset.prototype.parse = function(obj){
         e.retina = ( parseInt( a.slice( 0, -1 ) ) > 1);
       break;
       }
-
       if(! e.width ){ e.width = Number.POSITIVE_INFINITY; } //set to the top
       if(! e.retina ){ e.retina = false; }
     }
@@ -166,7 +169,7 @@ bgsrcset.prototype.setSingle = function(id){
     best = (comparray[0].retina != this.retina) ? comparray[1] : comparray[0];
   }
   
-  if( best.src != undefined ){
+  if( best.src != undefined && best.src != 'null'){
      var img = new Image();
   
     img.onload = function() {
