@@ -1,5 +1,7 @@
 /* BG Srcset 1.0 */
 var bgsrcset = function(){
+  this.called   = false;
+  this.callonce = true;
   this.compat();
 }
 
@@ -174,7 +176,15 @@ bgsrcset.prototype.setSingle = function(id){
   
     img.onload = function() {
       elem.node.style.backgroundImage = "url('" + best.src + "')";
-      _this.callback(elem);
+
+      /* only fire the callback on initial load, not resize events */
+      if(!_this.called){
+
+        _this.callback(elem);
+        _this.called = _this.callonce;
+        
+      }
+
     }
 
     img.src = best.src;
