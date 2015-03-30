@@ -6,14 +6,22 @@ var bgsrcset = function(){
 }
 
 bgsrcset.prototype.init = function(target, callback){
-  this.target = target;
+  //retina bool
   this.retina = window.devicePixelRatio > 1;
+  
+  //storage for our elements
   this.elements = [];
-  this.callback = typeof callback !== 'undefined' ? callback : function(){};
+  
+  //global onload callback for imagery
+  this.callback = typeof callback === 'function' ? callback : function(){};
+
+  //window width, for responsive handling
   this.curwidth = this.getWidth();
   
-  var elems = this.gather();
+  //get our input and turn it into an element list of some sort
+  var elems = this.gather(target);
   
+  //parse the element input
   for(var i = 0, l = elems.length; i < l; i++){ this.parse(elems[i]); }
 
   this.set();
@@ -36,7 +44,7 @@ bgsrcset.prototype.compat = function(){
   
   /* check for .trim() */
   if (!String.prototype.trim) {
-   String.prototype.trim=function(){return this.replace(/^\s+|\s+$/g, '');};
+    String.prototype.trim=function(){return this.replace(/^\s+|\s+$/g, '');};
   }
 
   /*------------------------* /
@@ -55,12 +63,34 @@ bgsrcset.prototype.compat = function(){
 /* -----------* /
    Gather elements
 / *----------- */
+bgsrcset.prototype.gather = function(target){
+  var autotypes = ['HTMLCollection', 'NodeList'];
+  var e = target;
+  var type =  (e.nodeType) ? 'Object' : Object.prototype.toString.call( e ).replace(/^\[object |\]$/g, '');
 
-bgsrcset.prototype.gather = function(){
-  var d = document,
-      e = this.target.trim(),
-      sel = e[0],
-      elems = [];
+  var func = 'parse' + type;
+  
+  if(autotypes.indexOf(type) > -1) return e;
+  
+  if( this[func] ) return this[func](e);
+  
+  return [];
+}
+
+bgsrcset.prototype.parseObject = function( target ) {
+  return (target.nodeType) ? [target] : [];
+}
+
+bgsrcset.prototype.parseArray = function( target ) {
+ return target;
+}
+
+bgsrcset.prototype.parseString = function( target ) {
+
+  var d = document;
+  var e = target.trim();
+  var sel = e[0];
+  var elems = [];
   
   switch(true){
   /* class */
@@ -77,7 +107,7 @@ bgsrcset.prototype.gather = function(){
     break;
   /* unknown */
   default:
-    elems = d.querySelectorAll(e);
+    elems = [];
   }
   
   return elems;
@@ -87,17 +117,18 @@ bgsrcset.prototype.gather = function(){
    Parse datasrc
 / *----------- */
 bgsrcset.prototype.parse = function(obj){
+  //our data to parase
+  var bgss = obj.getAttribute('bg-srcset');
   /* exit if no attribute */
-  if(obj.getAttribute('bg-srcset') === null){ return false; }
- 
+  if(attr === null){ return false; }
   
   /* create new element object */
   this.elements.push({});
   
   /* split up sets */
-  var set = obj.getAttribute('bg-srcset').split(','),
-    attr = '',
-    curelem = this.elements[this.elements.length - 1];
+  var set = bgss.split(',');
+  var attr = '';
+  var curelem = this.elements[this.elements.length - 1];
    
   
   curelem.node = obj;
@@ -108,24 +139,26 @@ bgsrcset.prototype.parse = function(obj){
     curelem.srcset.push({});
     attr = set[i].trim();
     var attrs = attr.split(' ');
-  
+    var a;
+    var e;
+    var t;
     /* since we can't know the order of the values, starting another loop */
     for(var attrc = 0, attrl = attrs.length; attrc < attrl; attrc++){
-      var a = attrs[attrc],
-          e = curelem.srcset[i]; //current attribute
-
+      a = attrs[attrc];
+      e = curelem.srcset[i]; //current attribute
+      t = a.length-1;
       switch(true){
       case a.trim() == "":
         //in case of extra white spaces
           continue;
       break;
-      case a[a.length-1] != 'w' && a[a.length-1] != 'x':
+      case a[t] != 'w' && a[a.length-1] != 'x':
         e.src = a;
       break;
-      case a[a.length-1] === 'w':
+      case a[t] === 'w':
         e.width = parseInt( a.slice( 0, -1 ) );
       break;
-      case a[a.length-1] === 'x':
+      case a[t] === 'x':
         e.retina = ( parseInt( a.slice( 0, -1 ) ) > 1);
       break;
       }
