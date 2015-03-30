@@ -3,7 +3,7 @@ var bgsrcset = function(){
   this.called   = false;
   this.callonce = true;
   this.compat();
-}
+};
 
 bgsrcset.prototype.init = function(target, callback){
   //retina bool
@@ -26,7 +26,7 @@ bgsrcset.prototype.init = function(target, callback){
 
   this.set();
   this.resize();
-}
+};
 
 /* -----------* /
    Fix compatibility issues*
@@ -58,7 +58,7 @@ bgsrcset.prototype.compat = function(){
     }
   }
   
-}
+};
 
 /* -----------* /
    Gather elements
@@ -75,15 +75,15 @@ bgsrcset.prototype.gather = function(target){
   if( this[func] ) return this[func](e);
   
   return [];
-}
+};
 
 bgsrcset.prototype.parseObject = function( target ) {
   return (target.nodeType) ? [target] : [];
-}
+};
 
 bgsrcset.prototype.parseArray = function( target ) {
  return target;
-}
+};
 
 bgsrcset.prototype.parseString = function( target ) {
 
@@ -111,7 +111,7 @@ bgsrcset.prototype.parseString = function( target ) {
   }
   
   return elems;
-}
+};
 
 /* -----------* /
    Parse datasrc
@@ -166,7 +166,7 @@ bgsrcset.prototype.parse = function(obj){
       if(! e.retina ){ e.retina = false; }
     }
   }
-}
+};
 
 /* -----------* /
    Set image
@@ -175,7 +175,7 @@ bgsrcset.prototype.set = function(){
   for(var i = 0, l = this.elements.length; i < l; i++){
     this.setSingle(i);
   }
-}
+};
 
 bgsrcset.prototype.setSingle = function(id){
   var width = 0,
@@ -218,7 +218,7 @@ bgsrcset.prototype.setSingle = function(id){
         
       }
 
-    }
+    };
 
     img.src = best.src;
   }else{
@@ -228,7 +228,7 @@ bgsrcset.prototype.setSingle = function(id){
  
 
   
-}
+};
 
 /* -----------* /
    Handle Resize
@@ -247,20 +247,21 @@ bgsrcset.prototype.resize = function(){
        }
      }, 250);
    });
-}
+};
 
 bgsrcset.prototype.addEvent = function(elem, evName, fn){
   elem.addEventListener(evName,fn,false);
-}
+};
 
 bgsrcset.prototype.getWidth = function(){
-  var w = window,
-    d = document,
-    e = d.documentElement,
-    g = d.getElementsByTagName('body')[0],
-    x = w.innerWidth || e.clientWidth || g.clientWidth;
-    return x;
-}
+    var w, d, e, g;
+    w = window;
+    d = document;
+    e = d.documentElement;
+    g = d.getElementsByTagName('body')[0];
+
+    return w.innerWidth || e.clientWidth || g.clientWidth;
+};
 
 function dynamicSort(property) {
   var sortOrder = 1;
@@ -273,7 +274,6 @@ function dynamicSort(property) {
     return result * sortOrder;
   }
 }
-
 /*
 usage
 var bgss = new bgsrcset();
