@@ -213,17 +213,24 @@
 
       if( best.src !== undefined && best.src !== 'null'){
          var img = new Image();
+          var done = false;
 
-        img.onload = function() {
-          elem.node.style.backgroundImage = "url('" + best.src + "')";
+        img.onload = img.onreadystatechange = function() {
+            if ( !done && (!this.readyState ||
+                this.readyState === "loaded" || this.readyState === "complete") ) {
+                done = true;
 
-          /* only fire the callback on initial load, not resize events */
-          if(!_this.called){
+                elem.node.style.backgroundImage = "url('" + best.src + "')";
 
-            _this.callback(elem);
-            _this.called = _this.callonce;
+                /* only fire the callback on initial load, not resize events */
+                if (!_this.called) {
 
-          }
+                    _this.callback(elem);
+                    _this.called = _this.callonce;
+
+                }
+
+            }
 
         };
 
